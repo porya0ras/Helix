@@ -347,6 +347,8 @@ namespace helix.Controllers
             var searchRes = await result.Select(e => new
             {
                 e.Id,
+                e.Name,
+                e.Type,
                 e.Status,
                 e.DateTime,
                 DetectorName = e._Detector.Name,
@@ -386,6 +388,7 @@ namespace helix.Controllers
         [HttpPost("FileUploadAndAutoInsert")]
         public async Task<IActionResult> FileUploadAndAutoInsert(IFormFile[] files)
         {
+            _Loger.LogInformation("Start!");
 
             var result = await _fileUploadService.UploadFileFits(files);
 

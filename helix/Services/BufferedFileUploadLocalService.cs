@@ -12,11 +12,13 @@ namespace helix.Services
     public class BufferedFileUploadLocalService : IBufferedFileUploadService
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<BufferedFileUploadLocalService> _Loger;
         string path = "";
-        public BufferedFileUploadLocalService(ApplicationDbContext context)
+        public BufferedFileUploadLocalService(ApplicationDbContext context, ILogger<BufferedFileUploadLocalService> loger)
         {
             _context = context;
             path = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "UploadedFiles"));
+            _Loger=loger;
         }
         public async Task<List<KeyValuePair<int, bool>>> UploadFile(string Id, IFormFile[] files)
         {
@@ -59,6 +61,7 @@ namespace helix.Services
                 catch (Exception ex)
                 {
                     result.Add(new KeyValuePair<int, bool>(filesList.IndexOf(file), false));
+                    _Loger.LogError(ex, "error in upload");
                     //throw new Exception("File Copy Failed", ex);
                 }
             }
@@ -231,6 +234,7 @@ namespace helix.Services
                 }
                 catch (Exception ex)
                 {
+                    _Loger.LogError(ex, "error in upload");
                     result.Add(new KeyValuePair<int, ObservationSubmission>(filesList.IndexOf(file), null));
                     //throw new Exception("File Copy Failed", ex);
                 }

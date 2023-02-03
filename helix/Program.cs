@@ -15,12 +15,15 @@ using helix.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using helix.Services.interfaces;
 using helix.Services;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.StaticFiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 var log = new LoggerConfiguration()
     .WriteTo.Console()
+    .WriteTo.File("log.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 Log.Logger = log;
 
@@ -63,6 +66,8 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddTransient<IBufferedFileUploadService, BufferedFileUploadLocalService>();
+
+builder.Services.AddDirectoryBrowser();
 
 
 builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
@@ -136,7 +141,20 @@ else
 
 app.UseCors("corsapp");
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+
+var provider = new FileExtensionContentTypeProvider();
+// Add new mappings
+provider.Mappings[".fits"] = "application/fits-image";
+provider.Mappings[".jpeg"] = "image/jpeg";
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    ContentTypeProvider = provider,
+    FileProvider = new PhysicalFileProvider(
+           Path.Combine(builder.Environment.ContentRootPath, "UploadedFiles")),
+    RequestPath = "/UploadedFiles",
+
+});
 app.UseRouting();
 
 app.UseAuthentication();
