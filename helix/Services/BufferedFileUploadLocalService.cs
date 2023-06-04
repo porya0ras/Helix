@@ -233,7 +233,16 @@ namespace helix.Services
                         obs.Status = "False";
                         obs.Name = "Unknown";
                         obs.DateTime=DateTime.Parse(fitsFile.Header["DATE-OBS"].ToString());
-
+                        if(obs.DateTime.TimeOfDay<=new TimeSpan(11,0,0))
+                        {
+                            var dt = obs.DateTime.AddDays(-1).Date;
+                            obs.SDateTime=dt;
+                        }
+                        else
+                        {
+                            var dt = obs.DateTime.Date;
+                            obs.SDateTime=dt;
+                        }
 
                         result.Add(new KeyValuePair<int, ObservationSubmission>(filesList.IndexOf(file), obs));
                     }

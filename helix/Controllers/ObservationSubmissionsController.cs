@@ -54,7 +54,8 @@ namespace helix.Controllers
                 e._SObject,
                 e._User.UserName,
                 e.Name,
-                e.Type
+                e.Type,
+                e.SDateTime
 
             }).ToListAsync();
         }
@@ -76,7 +77,8 @@ namespace helix.Controllers
                 FrameName = e._Filter.Name,
                 TelescopeName = e._Telescope.Name,
                 e._SObject,
-                e._User.UserName
+                e._User.UserName,
+                e.SDateTime
 
             }).FirstAsync(e => e.Id==id);
 
@@ -118,6 +120,8 @@ namespace helix.Controllers
             obs.Status=observationSubmission.Status.ToString();
             obs.Name=observationSubmission.Name;
             obs.Type=observationSubmission.Type;
+            obs.DateTime=observationSubmission.DateTime;
+            obs.SDateTime=observationSubmission.SDateTime;
 
             _context.Entry(obs).State = EntityState.Modified;
 
@@ -164,6 +168,7 @@ namespace helix.Controllers
                 {
                     Id=Guid.NewGuid(),
                     DateTime = observationSubmission.DateTime,
+                    SDateTime=observationSubmission.SDateTime,
                     _Detector= _detector,
                     Status="False",
                     _Filter= _frame,
@@ -264,12 +269,12 @@ namespace helix.Controllers
 
             if (DateOf!=null && DateOf!=DateTime.MinValue)
             {
-                result=result.Where(e => e.DateTime>=DateOf);
+                result=result.Where(e => e.DateTime>=DateOf || e.SDateTime>=DateOf);
             }
 
             if (DateTo!=null && DateTo!=DateTime.MinValue)
             {
-                result=result.Where(e => e.DateTime<=DateTo);
+                result=result.Where(e => e.DateTime<=DateTo || e.SDateTime<=DateTo);
             }
 
             if (!string.IsNullOrEmpty(User))
@@ -388,7 +393,8 @@ namespace helix.Controllers
                 FilterName = e._Filter.Name,
                 TelescopeName = e._Telescope.Name,
                 e._SObject,
-                e._User.UserName
+                e._User.UserName,
+                e.SDateTime
 
             })
             .OrderBy(e => e.DateTime)
