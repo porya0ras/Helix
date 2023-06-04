@@ -222,7 +222,10 @@ namespace helix.Controllers
             [FromForm] int? SortByFrame,
             [FromForm] int? SortSObject,
             [FromForm] int? SortDetector,
-            [FromForm] int? SortDate)
+            [FromForm] int? SortDate,
+            [FromForm] int? radius,
+             [FromForm] string? ra,
+              [FromForm] string? dec)
 
         {
             if (_context.ObservationSubmissions == null)
@@ -273,6 +276,34 @@ namespace helix.Controllers
             {
                 result=result.Where(e => e._User.Id==User);
             }
+
+            if(!string.IsNullOrEmpty(ra) && !string.IsNullOrEmpty(dec))
+            {
+                if (radius.HasValue && radius>=0)
+                {
+                    var RAs = ra.Split(' ');
+                    var DECs = dec.Split(' ');
+                    var _RA = (Convert.ToInt32(RAs[0])*15f*60f)+(Convert.ToInt32(RAs[1])*15f)+(Convert.ToInt32(RAs[2])*15f/60f);
+                    var _DEC = (Convert.ToInt32(DECs[0])*60f)+Convert.ToInt32(DECs[1])+(Convert.ToInt32(DECs[2])/60f);
+
+                    _RA=_RA-radius??0;
+
+                    result =result.Where(e =>
+                    (_RA-radius??0)<=(e._SObject.RA0*15f*60f)+(e._SObject.RA1*15f)+(e._SObject.RA2*15f/60f) &&
+                    (_RA+radius??0)>=(e._SObject.RA0*15f*60f)+(e._SObject.RA1*15f)+(e._SObject.RA2*15f/60f) &&
+                    (_DEC-radius??0)<=(e._SObject.DEC0*60f)+e._SObject.DEC1+(e._SObject.DEC2/60f) &&
+                    (_DEC+radius??0)>=(e._SObject.DEC0*60f)+e._SObject.DEC1+(e._SObject.DEC2/60f)
+                    );
+                }
+                else
+                {
+                    result = result.Where(e =>e._SObject.RA==ra && e._SObject.DEC==dec);
+                }
+
+            }
+
+
+
 
             //sorting
             if (SortByTelescope!=0)
@@ -330,6 +361,8 @@ namespace helix.Controllers
                     result=result.OrderByDescending(e => e.DateTime);
                 }
             }
+
+
 
             if (!result.Any())
             {

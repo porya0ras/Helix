@@ -9,6 +9,9 @@
     <DelaySign>False</DelaySign>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Migrations\Migrations.rar" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="CSharpFITS" Version="1.1.0" />
     <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="12.2.2" />
     <PackageReference Include="Magick.NET.Core" Version="12.2.2" />

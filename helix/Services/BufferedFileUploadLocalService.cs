@@ -171,12 +171,22 @@ namespace helix.Services
                         var _objects = _context.SObjects.Where(e => e.Name==OBJECT).FirstOrDefault();
                         if (_objects==null)
                         {
+
+                            var RAs = RA.Split(' ');
+                            var DECs = DEC.Split(' ');
+
                             SObject _object = new SObject()
                             {
                                 Id=0,
                                 Name =OBJECT,
                                 RA=RA,
                                 DEC=DEC,
+                                RA0=Convert.ToInt32(RAs[0]),
+                                RA1=Convert.ToInt32(RAs[1]),
+                                RA2=Convert.ToInt32(RAs[2]),
+                                DEC0=Convert.ToInt32(DECs[0]),
+                                DEC1=Convert.ToInt32(DECs[1]),
+                                DEC2=Convert.ToInt32(DECs[2])
                             };
 
                             _context.SObjects.Add(_object);
