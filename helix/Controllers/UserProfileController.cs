@@ -51,7 +51,7 @@ namespace helix.Controllers
             {
                 return NotFound();
             }
-            var user = await _context.Users.Select(e=>new {e.Id,e.UserName,e.Email, e.Type,e.Surname,e.LastName,e.Institution,e.PhoneNumber,e.EmailConfirmed,e.PhoneNumberConfirmed }).Where(e=>e.Id==id).FirstOrDefaultAsync();
+            var user = await _context.Users.Select(e=>new {e.Id,e.UserName,e.Email, e.Type,e.FirstName,e.LastName,e.Institution,e.PhoneNumber,e.EmailConfirmed,e.PhoneNumberConfirmed }).Where(e=>e.Id==id).FirstOrDefaultAsync();
 
             if (user == null)
             {

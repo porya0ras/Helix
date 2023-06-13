@@ -54,7 +54,7 @@ namespace helix.Controllers
             }
             var newUser = new User()
             {
-                Surname=register.Surname,
+                FirstName=register.Firstname,
                 LastName=register.Lastname,
                 UserName=register.Username,
                 Email=register.EmailAddress,
@@ -123,7 +123,7 @@ namespace helix.Controllers
             {
                 var authClaim = new List<Claim>
             {
-                new Claim(ClaimTypes.Name,appUser.Surname+" "+appUser.LastName),
+                new Claim(ClaimTypes.Name,appUser.FirstName+" "+appUser.LastName),
                 new Claim(ClaimTypes.NameIdentifier,appUser.Id),
                 new Claim(ClaimTypes.Role,role),
                 new Claim(JwtRegisteredClaimNames.Email,appUser.Email),

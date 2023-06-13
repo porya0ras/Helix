@@ -119,20 +119,27 @@ namespace helix.Controllers
 
             var RAs = sObject.RA.Split(' ');
             var DECs = sObject.DEC.Split(' ');
-
-            var _new = new SObject()
+            var _new = new SObject();
+            try
             {
-                Id = sObject.Id,
-                Name= sObject.Name,
-                RA=sObject.RA,
-                DEC=sObject.DEC,
-                RA0=Convert.ToInt32(RAs[0]),
-                RA1=Convert.ToInt32(RAs[1]),
-                RA2=Convert.ToInt32(RAs[2]),
-                DEC0=Convert.ToInt32(DECs[0]),
-                DEC1=Convert.ToInt32(DECs[1]),
-                DEC2=Convert.ToInt32(DECs[2])
-            };
+                _new = new SObject()
+                {
+                    Id = sObject.Id,
+                    Name= sObject.Name,
+                    RA=sObject.RA,
+                    DEC=sObject.DEC,
+                    RA0=Convert.ToInt32(RAs[0]),
+                    RA1=Convert.ToInt32(RAs[1]),
+                    RA2=Convert.ToInt32(RAs[2]),
+                    DEC0=Convert.ToInt32(DECs[0]),
+                    DEC1=Convert.ToInt32(DECs[1]),
+                    DEC2=Convert.ToInt32(DECs[2])
+                };
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Input String was not correct format!");
+            }
 
             _context.SObjects.Add(_new);
             await _context.SaveChangesAsync();

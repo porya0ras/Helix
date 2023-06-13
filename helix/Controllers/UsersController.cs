@@ -8,43 +8,46 @@ using Microsoft.EntityFrameworkCore;
 using helix.Data;
 using helix.Models;
 using Microsoft.AspNetCore.Authorization;
+using helix.ViewModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace helix.Controllers
 {
-    
+
     [Authorize(Roles = "ADMIN")]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-
-        public UsersController(ApplicationDbContext context)
+        private readonly UserManager<User> _UserManager;
+        public UsersController(ApplicationDbContext context, UserManager<User> userManager)
         {
             _context = context;
+            _UserManager=userManager;
         }
 
         // GET: api/Users
-        
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<dynamic>>> GetUsers()
         {
-          if (_context.Users == null)
-          {
-              return NotFound();
-          }
-            return await _context.Users.Select(e=>new {e.Id,e.Email,e.Surname,e.LastName,e.UserName}).ToListAsync();
+            if (_context.Users == null)
+            {
+                return NotFound();
+            }
+            return await _context.Users.Select(e => new { e.Id, e.Email, e.FirstName, e.LastName, e.UserName }).ToListAsync();
         }
 
         // GET: api/Users/5
-        
+
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(string id)
         {
-          if (_context.Users == null)
-          {
-              return NotFound();
-          }
+            if (_context.Users == null)
+            {
+                return NotFound();
+            }
             var user = await _context.Users.FindAsync(id);
 
             if (user == null)
@@ -58,14 +61,29 @@ namespace helix.Controllers
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(string id, User user)
+        public async Task<IActionResult> PutUser(string id, UserVM user)
         {
             if (id != user.Id)
             {
                 return BadRequest();
             }
+            var dbuser = _context.Users.Where(e => e.Id==id).FirstOrDefault();
 
-            _context.Entry(user).State = EntityState.Modified;
+            if(dbuser == null)
+                return NotFound();
+
+            //todo check change username
+            dbuser.UserName=user.Username;
+            dbuser.FirstName=user.Firstname;
+            dbuser.LastName=user.Lastname;
+            dbuser.Institution=user.Institution;
+            dbuser.Type=user.Type;
+
+
+            await _UserManager.ChangePasswordAsync(dbuser, user.CurrentPassword, user.Password);
+
+           _context.Entry(dbuser).State = EntityState.Modified;
+
 
             try
             {
@@ -91,10 +109,10 @@ namespace helix.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
-          if (_context.Users == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.Users'  is null.");
-          }
+            if (_context.Users == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Users'  is null.");
+            }
             _context.Users.Add(user);
             try
             {
@@ -148,7 +166,7 @@ namespace helix.Controllers
             {
                 return NotFound();
             }
-            return await _context.Users.Select(e => new KeyValuePair<string, string>(e.Id, e.Surname+" "+e.LastName)).ToListAsync();
+            return await _context.Users.Select(e => new KeyValuePair<string, string>(e.Id, e.FirstName+" "+e.LastName)).ToListAsync();
         }
     }
 }

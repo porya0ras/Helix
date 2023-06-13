@@ -47,7 +47,7 @@ public static class SeedData
         {
             var newUser = new User()
             {
-                Surname = "porya",
+                FirstName = "porya",
                 LastName = "ras",
                 UserName = "admin",
                 Email = "admin@hilex.com",
