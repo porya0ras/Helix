@@ -288,8 +288,8 @@ namespace helix.Controllers
                 {
                     var RAs = ra.Split(' ');
                     var DECs = dec.Split(' ');
-                    var _RA = (Convert.ToInt32(RAs[0])*15f*60f)+(Convert.ToInt32(RAs[1])*15f)+(Convert.ToInt32(RAs[2])*15f/60f);
-                    var _DEC = (Convert.ToInt32(DECs[0])*60f)+Convert.ToInt32(DECs[1])+(Convert.ToInt32(DECs[2])/60f);
+                    var _RA = (Convert.ToDouble(RAs[0])*15f*60f)+(Convert.ToDouble(RAs[1])*15f)+(Convert.ToDouble(RAs[2])*15f/60f);
+                    var _DEC = (Convert.ToDouble(DECs[0])*60f)+Convert.ToDouble(DECs[1])+(Convert.ToDouble(DECs[2])/60f);
 
                     _RA=_RA-radius??0;
 

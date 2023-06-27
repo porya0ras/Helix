@@ -128,12 +128,12 @@ namespace helix.Controllers
                     Name= sObject.Name,
                     RA=sObject.RA,
                     DEC=sObject.DEC,
-                    RA0=Convert.ToInt32(RAs[0]),
-                    RA1=Convert.ToInt32(RAs[1]),
-                    RA2=Convert.ToInt32(RAs[2]),
-                    DEC0=Convert.ToInt32(DECs[0]),
-                    DEC1=Convert.ToInt32(DECs[1]),
-                    DEC2=Convert.ToInt32(DECs[2])
+                    RA0=Convert.ToDouble(RAs[0]),
+                    RA1=Convert.ToDouble(RAs[1]),
+                    RA2=Convert.ToDouble(RAs[2]),
+                    DEC0=Convert.ToDouble(DECs[0]),
+                    DEC1=Convert.ToDouble(DECs[1]),
+                    DEC2=Convert.ToDouble(DECs[2])
                 };
             }
             catch(Exception ex)

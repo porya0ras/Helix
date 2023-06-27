@@ -140,7 +140,7 @@ else
 
 
 app.UseCors("corsapp");
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 var provider = new FileExtensionContentTypeProvider();
 // Add new mappings
