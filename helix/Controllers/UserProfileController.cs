@@ -37,11 +37,24 @@ namespace helix.Controllers
         /// دریافت رسد های خود کاربر
         /// </summary>
         [HttpGet("GetUserObservationSubmissions")]
-        public async Task<IEnumerable<ObservationSubmission>> GetUserObservationSubmissions()
+        public async Task<IEnumerable<dynamic>> GetUserObservationSubmissions()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
 
-            return await _context.ObservationSubmissions.Where(e => e._User.Id == userId).ToListAsync();
+            return await _context.ObservationSubmissions.Where(e => e._User.Id == userId).Select(e=>new {
+                e.Id,
+                e.Status,
+                e.DateTime,
+                e.Name,
+                DetectorName = e._Detector.Name,
+                FilterName = e._Filter.Name,
+                TelescopeName = e._Telescope.Name,
+                e._SObject,
+                e._User.UserName,
+                e.SDateTime,
+                e.Type
+
+            }).ToListAsync();
         }
         [HttpGet("GetUser")]
         public async Task<ActionResult<dynamic>> GetUser()

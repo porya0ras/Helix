@@ -36,7 +36,7 @@ namespace helix.Controllers
             {
                 return NotFound();
             }
-            return await _context.Users.Select(e => new { e.Id, e.Email, e.FirstName, e.LastName, e.UserName }).ToListAsync();
+            return await _context.Users.Select(e => new { e.Id, e.Email, e.FirstName, e.LastName, e.UserName,e.Institution,e.Type }).ToListAsync();
         }
 
         // GET: api/Users/5

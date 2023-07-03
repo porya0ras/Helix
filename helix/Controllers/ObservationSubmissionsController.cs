@@ -72,6 +72,7 @@ namespace helix.Controllers
             {
                 e.Id,
                 e.Status,
+                e.Name,
                 e.DateTime,
                 DetectorName = e._Detector.Name,
                 FrameName = e._Filter.Name,
@@ -279,7 +280,7 @@ namespace helix.Controllers
 
             if (!string.IsNullOrEmpty(User))
             {
-                result=result.Where(e => e._User.Id==User);
+                result=result.Where(e => e._User.UserName.Contains(User));
             }
 
             if(!string.IsNullOrEmpty(ra) && !string.IsNullOrEmpty(dec))
